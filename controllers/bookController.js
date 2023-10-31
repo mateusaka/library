@@ -1,8 +1,37 @@
 const Book = require("../models/book");
+const BookInstance = require("../models/bookinstance");
+const Author = require("../models/author");
+const Genre = require("../models/genre");
 
 const BookController = {
     index: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Site Home Page");
+        try {
+            const [
+                numBooks,
+                numBookInstances,
+                numAvailableBookInstances,
+                numAuthors,
+                numGenres
+            ] = await Promise.all([
+                Book.count({}),
+                BookInstance.count({}),
+                BookInstance.count({ status: "Available" }),
+                Author.count({}),
+                Genre.count({})
+            ]);
+
+            res.render("index", {
+                title: "Local Library Home",
+                bookCount: numBooks,
+                bookInstanceCount: numBookInstances,
+                bookInstanceAvailableCount: numAvailableBookInstances,
+                authorCount: numAuthors,
+                genreCount: numGenres
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+        //res.send("NOT IMPLEMENTED: Site Home Page");
     },
 
     list: async (req, res) => {
