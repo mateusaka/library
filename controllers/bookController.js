@@ -35,7 +35,21 @@ const BookController = {
     },
 
     list: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book list");
+        try {
+            const allBooks = await Book.find({}, "title author")
+            .sort({ title: 1 })
+            .populate("author")
+            .exec();
+
+            res.render("book-list", {
+                title: "Book List",
+                bookList: allBooks
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book list");
     },
 
     detail: async (req, res) => {
