@@ -22,9 +22,15 @@
                 </h1>
 
                 <ul>
-                    <% for(let book of bookList) {%>
+                    <% if(bookList.length > 0) {%>
+                        <% for(let book of bookList) {%>
+                            <li>
+                                <a href="<%= book.url %>"><%= book.title %></a> (<%= book.author.name %>)
+                            </li>
+                        <%}%>
+                    <%} else {%>
                         <li>
-                            <a href="<%= book.url %>"><%= book.title %></a> (<%= book.author.name %>)
+                            There are no books.
                         </li>
                     <%}%>
                 </ul>
