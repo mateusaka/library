@@ -2,7 +2,20 @@ const BookInstance = require("../models/bookinstance");
 
 const BookInstanceController = {
     list: async (req, res) => {
-        res.send("NOT IMPLEMENTED: BookInstance list");
+        try {
+            const allBookInstances = await BookInstance.find()
+            .populate("book")
+            .exec();
+
+            res.render("bookinstance-list", {
+                title: "Book Instance List",
+                bookInstanceList: allBookInstances
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: BookInstance list");
     },
 
     detail: async (req, res) => {
