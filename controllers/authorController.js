@@ -2,7 +2,20 @@ const Author = require("../models/author");
 
 const AuthorController = {
     list: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author list");
+        try {
+            const allAuthors = await Author.find()
+            .sort({ lastName: 1 })
+            .exec();
+
+            res.render("author-list", {
+                title: "Author List",
+                authorList: allAuthors
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Author list");
     },
 
     detail: async (req, res) => {

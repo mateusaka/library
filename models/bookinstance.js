@@ -35,11 +35,7 @@ BookInstanceSchema.virtual("url").get(function () {
 });
 
 BookInstanceSchema.virtual("dueBackFormatted").get(function () {
-    return DateTime.fromJSDate(this.dueBack).setLocale("en").toLocaleString({
-        day: "numeric",
-        month: "long", // "short"
-        year: "numeric"
-    });
+    return DateTime.fromJSDate(this.dueBack).setLocale("en").toFormat("dd LLLL yyyy");
 });
 
 module.exports = mongoose.model("BookInstance", BookInstanceSchema);
