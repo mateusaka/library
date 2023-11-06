@@ -35,7 +35,7 @@
                                     <span class="text-warning"><%= instance.status %></span>
                                 <%}%>
                                 <% if (instance.status !== "Available") { %>
-                                    <span>(Due: <%= instance.dueBack %>)</span>
+                                    <span>(Due: <%= instance.dueBackFormatted %>)</span>
                                 <%}%>                                  
                             </li>
                         <%}%>
