@@ -1,4 +1,5 @@
 const Genre = require("../models/genre");
+const Book = require("../models/book");
 
 const GenreController = {
     list: async (req, res) => {
@@ -19,7 +20,32 @@ const GenreController = {
     },
 
     detail: async (req, res) => {
-        res.send(`NOT IMPLEMENTED: Genre detail: ${req.params.id}`);
+        try {
+            const [
+                genre,
+                booksInGenre
+            ] = await Promise.all([
+                Genre.findById(req.params.id).exec(),
+                Book.find({ genre: req.params.id }, "title summary").exec()
+            ]);
+
+            if(genre === null) {
+                const error = new Error("Genre not found");
+                error.status = 404;
+
+                return error;
+            }
+
+            res.render("genre-detail", {
+                title: "Genre Detail",
+                genre: genre,
+                genreBooks: booksInGenre
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send(`NOT IMPLEMENTED: Genre detail: ${req.params.id}`);
     },
 
     createGet: async (req, res) => {
