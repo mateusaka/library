@@ -53,7 +53,29 @@ const BookController = {
     },
 
     detail: async (req, res) => {
-        res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
+        try {
+            const [
+                book,
+                bookInstances
+            ] = await Promise.all([
+                Book.findById(req.params.id).populate("author").populate("genre").exec(),
+                BookInstance.find({ book: req.params.id }).exec()
+            ]);
+
+            if(book === null) {
+                return res.send("Book not found");
+            }
+
+            res.render("book-detail", {
+                title: book.title,
+                book: book,
+                bookInstances: bookInstances
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
     },
 
     createGet: async (req, res) => {

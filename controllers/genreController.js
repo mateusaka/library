@@ -30,10 +30,10 @@ const GenreController = {
             ]);
 
             if(genre === null) {
-                const error = new Error("Genre not found");
-                error.status = 404;
+                /* const error = new Error("Genre not found");
+                error.status = 404; */
 
-                return error;
+                return res.send("Genre not found");
             }
 
             res.render("genre-detail", {

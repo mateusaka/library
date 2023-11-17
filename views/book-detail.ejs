@@ -1,0 +1,103 @@
+<style>
+    .container {
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Library</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/sidebar.ejs")%>
+            </div>
+
+            <div class="col-sm-10">
+                <h1>
+                    Title: <%=title%>
+                </h1>
+
+                <p>
+                    <strong>Author:</strong><a href="<%=book.author.url%>">
+                        <%=book.author.name%>
+                    </a>
+                </p>
+
+                <p>
+                    <strong>Summary:</strong>
+                    <%=book.summary%>
+                </p>
+
+                <p>
+                    <strong>ISBN:</strong>
+                    <%=book.isbn%>
+                </p>
+
+                <p><strong>Genre:</strong>
+                    <% for(let i = 0; i < book.genre.length; i++) {%>
+                        <a href="<%=book.genre[i].url%>">
+                            <%=book.genre[i].name%>
+                        </a>
+
+                        <% if (i < book.genre.length - 1) {%>
+                            ,
+                        <%}%>
+                    <%}%>
+                </p>
+
+                <div class="container">
+                    <h4>Copies</h4>
+
+                    <% for(intance of bookInstances) {%>
+                        <hr>
+                        <% if (intance.status == "Available") {%>
+                            <p class="text-success">
+                                <%= intance.status %>
+                            </p>
+                        <%} else if (intance.status == "Maintenance" ) {%>
+                            <p class="text-danger">
+                                <%=intance.status%>
+                            </p>
+                        <%} else {%>
+                            <p class="text-warning">
+                                <%=intance.status%>
+                            </p>
+                        <%}%>
+
+                        <p><strong>Imprint:</strong>
+                            <%= intance.imprint %>
+                        </p>
+
+                        <% if (intance.status != "Available" ) {%>
+                            <p><strong>Due back:</strong>
+                                <%=intance.dueBack%>
+                            </p>
+                        <%}%>
+
+                        <p><strong>Id:</strong>
+                            <a href="<%=intance.url%>"><%= intance._id%></a>
+                        </p>
+
+                    <%}%>
+
+                    <% if (bookInstances.length === 0) { %>
+                        <p>There are no copies of this book in the library.</p>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
