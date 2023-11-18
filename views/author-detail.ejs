@@ -1,0 +1,57 @@
+<style>
+    .container {
+        margin-left: 20px;
+        margin-top: 20px
+    }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Library</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <%- include("./partials/sidebar.ejs")%>
+            </div>
+
+            <div class="col-sm-10">
+                <h1>Author: <%=author.name%>
+                </h1>
+
+                <p>
+                    <%=author.dateOfBirthFormatted%> - <%=author.dateOfDeathFormatted%>
+                </p>
+
+                <div class="container">
+                    <h4>Books</h4>
+
+                    <dl>
+                        <%for(book of authorBooks) {%>
+                            <dt>
+                                <a href="<%=book.url%>"><%=book.title%></a>
+                            </dt>
+                            <dd>
+                                <%=book.summary%>
+                            </dd>
+                        <%}%>
+
+                        <% if(authorBooks.length === 0) {%>
+                            <p>This author has no books.</p>
+                        <%}%>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

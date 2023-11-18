@@ -1,4 +1,5 @@
 const Author = require("../models/author");
+const Book = require("../models/book");
 
 const AuthorController = {
     list: async (req, res) => {
@@ -19,7 +20,29 @@ const AuthorController = {
     },
 
     detail: async (req, res) => {
-        res.send(`NOT IMPLEMENTED: Author detail: ${req.params.id}`);
+        try {
+            const [
+                author,
+                allBooksByAuthor
+            ] = await Promise.all([
+                Author.findById(req.params.id).exec(),
+                Book.find({ author: req.params.id }, "title summary").exec()
+            ]);
+
+            if(author === null) {
+                return res.send("Author not found");
+            }
+
+            res.render("author-detail", {
+                title: "Author Detail",
+                author: author,
+                authorBooks: allBooksByAuthor
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send(`NOT IMPLEMENTED: Author detail: ${req.params.id}`);
     },
 
     createGet: async (req, res) => {
