@@ -19,7 +19,24 @@ const BookInstanceController = {
     },
 
     detail: async (req, res) => {
-        res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
+        try {
+            const bookInstance = await BookInstance.findById(req.params.id)
+            .populate("book")
+            .exec();
+
+            if(bookInstance === null) {
+                return res.send("Book copy not found");
+            }
+
+            res.render("bookinstance-detail", {
+                title: "Book:",
+                bookInstance: bookInstance
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
     },
 
     createGet: async (req, res) => {
