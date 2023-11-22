@@ -59,10 +59,8 @@ const GenreController = {
     },
 
     createPost: async (req, res) => {
-        console.log(req.params.name);
-
         try {
-            await body("name", "Genre name must contain at least 3 characters")
+            await body("name", "Genre name must contain at least 3 characters.")
                 .trim()
                 .isLength({ min: 3 })
                 .escape()

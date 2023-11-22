@@ -1,6 +1,8 @@
 const Author = require("../models/author");
 const Book = require("../models/book");
 
+const { body, validationResult } = require("express-validator");
+
 const AuthorController = {
     list: async (req, res) => {
         try {
@@ -46,11 +48,72 @@ const AuthorController = {
     },
 
     createGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author create GET");
+        res.render("author-form", {
+            title: "Create Author"
+        });
+
+        //res.send("NOT IMPLEMENTED: Author create GET");
     },
 
     createPost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author create POST");
+        try {
+            await Promise.all([
+                body("firstName")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .withMessage("First name must be specified.")
+                    /* .isAlphanumeric()
+                    .withMessage("First name has non-alphanumeric characters.") */
+                    .run(req),
+                body("lastName")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .withMessage("Last name must be specified.")
+                    /* .isAlphanumeric()
+                    .withMessage("Last name has non-alphanumeric characters.") */
+                    .run(req),
+                body("dateOfBirth", "Invalid date of birth")
+                    .optional({ values: "falsy" })
+                    .isISO8601()
+                    .toDate()
+                    .run(req),
+                body("dateOfDeath", "Invalid date of death")
+                    .optional({ values: "falsy" })
+                    .isISO8601()
+                    .toDate()
+                    .run(req)
+            ]);
+
+            const errors = validationResult(req);
+
+            const author = new Author({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                dateOfBirth: req.body.dateOfBirth,
+                dateOfDeath: req.body.dateOfDeath,
+            });
+
+            if(!errors.isEmpty()) {
+                res.render("author-form", {
+                    title: "Create Author",
+                    author: author,
+                    errors: errors.array()
+                });
+
+                return;
+            }
+            else {
+                await author.save();
+
+                res.redirect(author.url);
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Author create POST");
     },
 
     deleteGet: async (req, res) => {
