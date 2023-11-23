@@ -3,6 +3,8 @@ const BookInstance = require("../models/bookinstance");
 const Author = require("../models/author");
 const Genre = require("../models/genre");
 
+const { body, validationResult } = require("express-validator");
+
 const BookController = {
     index: async (req, res) => {
         try {
@@ -79,11 +81,116 @@ const BookController = {
     },
 
     createGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book create GET");
+        try {
+            const [
+                allAuthors,
+                allGenres
+            ] = await Promise.all([
+                Author.find().exec(),
+                Genre.find().exec()
+            ]);
+
+            allAuthors.sort(function(a, b) {
+                let textA = a.lastName.toUpperCase();
+                let textB = b.lastName.toUpperCase();
+
+                return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+            });
+
+            res.render("book-form", {
+                title: "Create Book",
+                authors: allAuthors,
+                genres: allGenres
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book create GET");
     },
 
     createPost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book create POST");
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === "undefined" ? [] : [req.body.genre];
+        }
+
+        try {
+            await Promise.all([
+                body("title", "Title must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("author", "Author must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("summary", "Summary must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("isbn", "ISBN must not be empty")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("genre.*")
+                    .escape()
+                    .run(req)
+            ]);
+
+            const errors = validationResult(req);
+
+            const book = new Book({
+                title: req.body.title,
+                author: req.body.author,
+                summary: req.body.summary,
+                isbn: req.body.isbn,
+                genre: req.body.genre,
+            });
+
+            if(!errors.isEmpty()) {
+                const [
+                    allAuthors,
+                    allGenres
+                ] = await Promise.all([
+                    Author.find().exec(),
+                    Genre.find().exec()
+                ]);
+
+                for(const genre of allGenres) {
+                    if(book.genre.includes(genre._id)) {
+                        genre.checked = "true";
+                    }
+                }
+
+                allAuthors.sort(function(a, b) {
+                    let textA = a.lastName.toUpperCase();
+                    let textB = b.lastName.toUpperCase();
+
+                    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+                });
+
+                res.render("book-form", {
+                    title: "Create Book",
+                    authors: allAuthors,
+                    genres: allGenres,
+                    book: book,
+                    errors: errors.array()
+                });
+            }
+            else {
+                await book.save();
+
+                res.redirect(book.url);
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book create POST");
     },
 
     deleteGet: async (req, res) => {
