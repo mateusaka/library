@@ -194,11 +194,58 @@ const BookController = {
     },
 
     deleteGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book delete GET");
+        try {
+            const [
+                book,
+                bookInstances
+            ] = await Promise.all([
+                Book.findById(req.params.id).exec(),
+                BookInstance.find({ book: req.params.id }).exec()
+            ]);
+
+            if(book === null) {
+                res.redirect("/catalog/books");
+            }
+
+            res.render("book-delete", {
+                title: "Delete Book",
+                book: book,
+                bookInstances: bookInstances
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book delete GET");
     },
 
     deletePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book delete POST");
+        try {
+            const [
+                book,
+                bookInstances
+            ] = await Promise.all([
+                Book.findById(req.params.id).exec(),
+                BookInstance.find({ book: req.params.id }, "title summary").exec()
+            ]);
+
+            if(bookInstances.length > 0) {
+                res.render("author-delete", {
+                    title: "Delete Book",
+                    book: book,
+                    bookInstances: bookInstances
+                });
+            }
+            else {
+                await Book.findByIdAndDelete(req.body.bookid);
+
+                res.redirect("/catalog/books");
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book delete POST");
     },
 
     updateGet: async (req, res) => {

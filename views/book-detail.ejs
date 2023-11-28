@@ -59,34 +59,34 @@
                 <div class="container">
                     <h4>Copies</h4>
 
-                    <% for(intance of bookInstances) {%>
+                    <% for(instance of bookInstances) {%>
                         <hr>
-                        <% if (intance.status == "Available") {%>
+                        <% if (instance.status == "Available") {%>
                             <p class="text-success">
-                                <%= intance.status %>
+                                <%= instance.status %>
                             </p>
-                        <%} else if (intance.status == "Maintenance" ) {%>
+                        <%} else if (instance.status == "Maintenance" ) {%>
                             <p class="text-danger">
-                                <%=intance.status%>
+                                <%=instance.status%>
                             </p>
                         <%} else {%>
                             <p class="text-warning">
-                                <%=intance.status%>
+                                <%=instance.status%>
                             </p>
                         <%}%>
 
                         <p><strong>Imprint:</strong>
-                            <%= intance.imprint %>
+                            <%= instance.imprint %>
                         </p>
 
-                        <% if (intance.status != "Available" ) {%>
+                        <% if (instance.status != "Available" ) {%>
                             <p><strong>Due back:</strong>
-                                <%=intance.dueBack%>
+                                <%=instance.dueBackFormatted%>
                             </p>
                         <%}%>
 
                         <p><strong>Id:</strong>
-                            <a href="<%=intance.url%>"><%= intance._id%></a>
+                            <a href="<%=instance.url%>"><%=instance._id%></a>
                         </p>
 
                     <%}%>
@@ -95,6 +95,11 @@
                         <p>There are no copies of this book in the library.</p>
                     <%}%>
                 </div>
+
+                <hr>
+                <p>
+                    <a href="<%=book.url%>/delete">Delete book</a>
+                </p>
             </div>
         </div>
     </div>

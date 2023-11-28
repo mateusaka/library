@@ -38,6 +38,11 @@
                 <% if (bookInstance.status !== "Available") {%>
                     <p><strong>Due back:</strong> <%=bookInstance.dueBackFormatted%></p>
                 <%}%>
+
+                <hr>
+                <p>
+                    <a href="<%=bookInstance.url%>/delete">Delete copy</a>
+                </p>
             </div>
         </div>
     </div>

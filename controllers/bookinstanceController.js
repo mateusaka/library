@@ -123,11 +123,50 @@ const BookInstanceController = {
     },
 
     deleteGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: BookInstance delete GET");
+        try {
+            const bookInstance = await BookInstance.findById(req.params.id)
+            .populate("book")
+            .exec();
+
+            if(bookInstance === null) {
+                res.redirect("/catalog/books");
+            }
+
+            res.render("bookinstance-delete", {
+                title: "Delete Copy",
+                bookInstance: bookInstance,
+            });
+        } catch (error) {
+            res.send("An error has occurred.");
+
+            //console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: BookInstance delete GET");
     },
 
     deletePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: BookInstance delete POST");
+        try {
+            const bookInstance = await BookInstance.findById(req.params.id)
+
+            if(bookInstance.status !== "Available") {
+                res.render("bookinstance-delete", {
+                    title: "Delete Copy",
+                    bookInstance: bookInstance,
+                });
+            }
+            else {
+                await BookInstance.findByIdAndDelete(req.body.bookinstanceid);
+
+                res.redirect("/catalog/bookinstances");
+            }
+        } catch (error) {
+            res.send("An error has occurred.");
+
+            //console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: BookInstance delete POST");
     },
 
     updateGet: async (req, res) => {

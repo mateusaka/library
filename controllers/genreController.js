@@ -103,11 +103,58 @@ const GenreController = {
     },
 
     deleteGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Genre delete GET");
+        try {
+            const [
+                genre,
+                allBooksByGenre
+            ] = await Promise.all([
+                Genre.findById(req.params.id).exec(),
+                Book.find({ genre: req.params.id }, "title summary").exec()
+            ]);
+
+            if(genre === null) {
+                res.redirect("/catalog/genres");
+            }
+
+            res.render("genre-delete", {
+                title: "Delete Genre",
+                genre: genre,
+                genreBooks: allBooksByGenre
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Genre delete GET");
     },
 
     deletePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Genre delete POST");
+        try {
+            const [
+                genre,
+                allBooksByGenre
+            ] = await Promise.all([
+                Genre.findById(req.params.id).exec(),
+                Book.find({ genre: req.params.id }, "title summary").exec()
+            ]);
+
+            if(allBooksByGenre.length > 0) {
+                res.render("genre-delete", {
+                    title: "Delete Genre",
+                    genre: genre,
+                    authorBooks: allBooksByGenre
+                });
+            }
+            else {
+                await Genre.findByIdAndDelete(req.body.genreid);
+
+                res.redirect("/catalog/genres");
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Genre delete POST");
     },
 
     updateGet: async (req, res) => {

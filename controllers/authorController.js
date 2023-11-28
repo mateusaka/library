@@ -117,11 +117,58 @@ const AuthorController = {
     },
 
     deleteGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author delete GET");
+        try {
+            const [
+                author,
+                allBooksByAuthor
+            ] = await Promise.all([
+                Author.findById(req.params.id).exec(),
+                Book.find({ author: req.params.id }, "title summary").exec()
+            ]);
+
+            if(author === null) {
+                res.redirect("/catalog/authors");
+            }
+
+            res.render("author-delete", {
+                title: "Delete Author",
+                author: author,
+                authorBooks: allBooksByAuthor
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Author delete GET");
     },
 
     deletePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author delete POST");
+        try {
+            const [
+                author,
+                allBooksByAuthor
+            ] = await Promise.all([
+                Author.findById(req.params.id).exec(),
+                Book.find({ author: req.params.id }, "title summary").exec()
+            ]);
+
+            if(allBooksByAuthor.length > 0) {
+                res.render("author-delete", {
+                    title: "Delete Author",
+                    author: author,
+                    authorBooks: allBooksByAuthor
+                });
+            }
+            else {
+                await Author.findByIdAndDelete(req.body.authorid);
+
+                res.redirect("/catalog/authors");
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Author delete POST");
     },
 
     updateGet: async (req, res) => {
