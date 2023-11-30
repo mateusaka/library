@@ -31,7 +31,7 @@ const BookController = {
                 genreCount: numGenres
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
         //res.send("NOT IMPLEMENTED: Site Home Page");
     },
@@ -48,7 +48,7 @@ const BookController = {
                 bookList: allBooks
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book list");
@@ -74,7 +74,7 @@ const BookController = {
                 bookInstances: bookInstances
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send(`NOT IMPLEMENTED: Book detail: ${req.params.id}`);
@@ -103,7 +103,7 @@ const BookController = {
                 genres: allGenres
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book create GET");
@@ -187,7 +187,7 @@ const BookController = {
                 res.redirect(book.url);
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book create POST");
@@ -213,7 +213,7 @@ const BookController = {
                 bookInstances: bookInstances
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book delete GET");
@@ -242,7 +242,7 @@ const BookController = {
                 res.redirect("/catalog/books");
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book delete POST");
@@ -279,7 +279,7 @@ const BookController = {
                 book: book
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book update GET");
@@ -357,7 +357,7 @@ const BookController = {
                 res.redirect(updatedBook.url);
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Book update POST");

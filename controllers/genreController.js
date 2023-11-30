@@ -15,7 +15,7 @@ const GenreController = {
                 genreList: allGenre
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Genre list");
@@ -44,7 +44,7 @@ const GenreController = {
                 genreBooks: booksInGenre
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send(`NOT IMPLEMENTED: Genre detail: ${req.params.id}`);
@@ -96,7 +96,7 @@ const GenreController = {
                 }
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Genre create POST");
@@ -122,7 +122,7 @@ const GenreController = {
                 genreBooks: allBooksByGenre
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Genre delete GET");
@@ -151,7 +151,7 @@ const GenreController = {
                 res.redirect("/catalog/genres");
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Genre delete POST");
@@ -170,7 +170,7 @@ const GenreController = {
                 genre: genre
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Genre update GET");
@@ -204,7 +204,7 @@ const GenreController = {
                 res.redirect(updatedGenre.url);
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Genre update POST");

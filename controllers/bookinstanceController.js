@@ -16,7 +16,7 @@ const BookInstanceController = {
                 bookInstanceList: allBookInstances
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance list");
@@ -37,7 +37,7 @@ const BookInstanceController = {
                 bookInstance: bookInstance
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send(`NOT IMPLEMENTED: BookInstance detail: ${req.params.id}`);
@@ -59,7 +59,7 @@ const BookInstanceController = {
                 bookList: allBooks,
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance create GET");
@@ -117,7 +117,7 @@ const BookInstanceController = {
             }
 
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance create POST");
@@ -139,8 +139,6 @@ const BookInstanceController = {
             });
         } catch (error) {
             res.send("An error has occurred.");
-
-            //console.log("Error: " + error);
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance delete GET");
@@ -163,8 +161,6 @@ const BookInstanceController = {
             }
         } catch (error) {
             res.send("An error has occurred.");
-
-            //console.log("Error: " + error);
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance delete POST");
@@ -188,7 +184,7 @@ const BookInstanceController = {
                 bookInstance: bookInstance
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance update GET");
@@ -239,7 +235,7 @@ const BookInstanceController = {
             }
 
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: BookInstance update POST");

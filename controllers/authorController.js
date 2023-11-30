@@ -15,7 +15,7 @@ const AuthorController = {
                 authorList: allAuthors
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Author list");
@@ -41,7 +41,7 @@ const AuthorController = {
                 authorBooks: allBooksByAuthor
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send(`NOT IMPLEMENTED: Author detail: ${req.params.id}`);
@@ -110,7 +110,7 @@ const AuthorController = {
                 res.redirect(author.url);
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Author create POST");
@@ -136,7 +136,7 @@ const AuthorController = {
                 authorBooks: allBooksByAuthor
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Author delete GET");
@@ -165,7 +165,7 @@ const AuthorController = {
                 res.redirect("/catalog/authors");
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Author delete POST");
@@ -184,7 +184,7 @@ const AuthorController = {
                 author: author
             });
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Author update GET");
@@ -240,7 +240,7 @@ const AuthorController = {
                 res.redirect(updatedAuthor.url);
             }
         } catch (error) {
-            console.log("Error: " + error);
+            res.send("An error has occurred.");
         }
 
         //res.send("NOT IMPLEMENTED: Author update POST");
