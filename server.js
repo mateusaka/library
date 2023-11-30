@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require("express");
 const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
 
 const path = require("path");
 const db = require("./database/database");
@@ -15,6 +16,11 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+const limiter = RateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 20,
+});
+
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -25,6 +31,8 @@ app.use(
       },
     }),
 );
+
+app.use(limiter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
