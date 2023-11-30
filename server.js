@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require("express");
+const helmet = require("helmet");
 
 const path = require("path");
 const db = require("./database/database");
@@ -16,6 +17,14 @@ const PORT = process.env.PORT || 3000;
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"]
+      },
+    }),
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
