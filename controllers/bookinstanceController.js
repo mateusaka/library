@@ -2,6 +2,7 @@ const BookInstance = require("../models/bookinstance");
 const Book = require("../models/book");
 
 const { body, validationResult } = require("express-validator");
+const bookinstance = require("../models/bookinstance");
 
 const BookInstanceController = {
     list: async (req, res) => {
@@ -170,11 +171,78 @@ const BookInstanceController = {
     },
 
     updateGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: BookInstance update GET");
+        try {
+            const bookInstance = await BookInstance.findById(req.params.id)
+                .populate("book")
+                .exec();
+
+            if(bookInstance === null) {
+                return res.send("Book instance(copy) not found");
+            }
+
+            const book = await Book.findById(bookInstance.book._id).exec();
+
+            res.render("bookinstance-form", {
+                title: "Update BookInstance",
+                book: book,
+                bookInstance: bookInstance
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: BookInstance update GET");
     },
 
     updatePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: BookInstance update POST");
+        try {
+            await Promise.all([
+                body("book", "Book must be specified")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("status")
+                    .escape()
+                    .run(req),
+                body("dueBack", "Invalid date")
+                    .optional({ values: "falsy" })
+                    .isISO8601()
+                    .toDate()
+                    .run(req)
+            ]);
+
+            const errors = validationResult(req);
+
+            const bookInstance = new BookInstance({
+                book: req.body.book,
+                imprint: req.body.imprint,
+                status: req.body.status,
+                dueBack: req.body.dueBack,
+                _id: req.params.id,
+            });
+
+            const book = await Book.findById(bookInstance.book._id).exec();
+
+            if(!errors.isEmpty()) {
+                res.render("bookinstance-form", {
+                    title: "Update BookInstance",
+                    book: book,
+                    bookInstance: bookInstance,
+                    errors: errors.array()
+                });
+            }
+            else {
+                const updatedBookInstance = await BookInstance.findByIdAndUpdate(req.params.id, bookInstance);
+
+                res.redirect(updatedBookInstance.url);
+            }
+
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: BookInstance update POST");
     },
 }
 

@@ -172,11 +172,78 @@ const AuthorController = {
     },
 
     updateGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author update GET");
+        try {
+            const author = await Author.findById(req.params.id);
+
+            if(author === null) {
+                return res.send("Author not found");
+            }
+
+            res.render("author-form", {
+                title: "Update Book",
+                author: author
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Author update GET");
     },
 
     updatePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Author update POST");
+        try {
+            await Promise.all([
+                body("firstName")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .withMessage("First name must be specified.")
+                    .run(req),
+                body("lastName")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .withMessage("Last name must be specified.")
+                    .run(req),
+                body("dateOfBirth", "Invalid date of birth")
+                    .optional({ values: "falsy" })
+                    .isISO8601()
+                    .toDate()
+                    .run(req),
+                body("dateOfDeath", "Invalid date of death")
+                    .optional({ values: "falsy" })
+                    .isISO8601()
+                    .toDate()
+                    .run(req)
+            ]);
+
+            const errors = validationResult(req);
+
+            const author = new Author({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                dateOfBirth: req.body.dateOfBirth,
+                dateOfDeath: req.body.dateOfDeath,
+                _id: req.params.id,
+            });
+
+            if(!errors.isEmpty()) {
+                res.render("author-form", {
+                    title: "Update Author",
+                    author: author,
+                    errors: errors.array()
+                });
+            }
+            else {
+                const updatedAuthor = await Author.findByIdAndUpdate(req.params.id, author);
+
+                res.redirect(updatedAuthor.url);
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Author update POST");
     },
 }
 

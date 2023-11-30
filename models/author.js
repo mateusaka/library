@@ -37,11 +37,19 @@ AuthorSchema.virtual("url").get(function () {
 });
 
 AuthorSchema.virtual("dateOfBirthFormatted").get(function () {
-    return this.dateOfBirth ? DateTime.fromJSDate(this.dateOfBirth).setLocale("en").toFormat("dd LLLL yyyy") : "";
+    return this.dateOfBirth ? DateTime.fromJSDate(this.dateOfBirth, { zone: 'UTC' }).setLocale("en").toFormat("dd LLLL yyyy") : "";
 });
 
 AuthorSchema.virtual("dateOfDeathFormatted").get(function () {
-    return this.dateOfDeath ? DateTime.fromJSDate(this.dateOfDeath).setLocale("en").toFormat("dd LLLL yyyy") : "";
+    return this.dateOfDeath ? DateTime.fromJSDate(this.dateOfDeath, { zone: 'UTC' }).setLocale("en").toFormat("dd LLLL yyyy") : "";
+});
+
+AuthorSchema.virtual("dateOfBirthFormattedYYYYMMDD").get(function () {
+    return this.dateOfBirth ? DateTime.fromJSDate(this.dateOfBirth, { zone: 'UTC' }).setLocale("en").toFormat("yyyy-MM-dd") : "";
+});
+
+AuthorSchema.virtual("dateOfDeathFormattedYYYYMMDD").get(function () {
+    return this.dateOfDeath ? DateTime.fromJSDate(this.dateOfDeath, { zone: 'UTC' }).setLocale("en").toFormat("yyyy-MM-dd") : "";
 });
 
 module.exports = mongoose.model("Author", AuthorSchema);

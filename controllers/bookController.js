@@ -249,11 +249,118 @@ const BookController = {
     },
 
     updateGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book update GET");
+        try {
+            const [
+                book,
+                allAuthors,
+                allGenres
+            ] = await Promise.all([
+                Book.findById(req.params.id).populate("author").populate("genre").exec(),
+                Author.find().sort({ lastName: 1 }).exec(),
+                Genre.find().sort({ name: 1 }).exec(),
+            ]);
+    
+            if(book === null) {
+                return res.send("Book not found");
+            }
+    
+            for (const genre of allGenres) {
+                for (const book_g of book.genre) {
+                    if (genre._id.toString() === book_g._id.toString()) {
+                        genre.checked = "true";
+                    }
+                }
+            }
+    
+            res.render("book-form", {
+                title: "Update Book",
+                authors: allAuthors,
+                genres: allGenres,
+                book: book
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book update GET");
     },
 
     updatePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Book update POST");
+        if(!Array.isArray(req.body.genre)) {
+            req.body.genre = typeof req.body.genre === "undefined" ? [] : [req.body.genre];
+        }
+
+        try {
+            await Promise.all([
+                body("title", "Title must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("author", "Author must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("summary", "Summary must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("isbn", "ISBN must not be empty.")
+                    .trim()
+                    .isLength({ min: 1 })
+                    .escape()
+                    .run(req),
+                body("genre.*")
+                    .escape()
+                    .run(req)
+            ]);
+
+            const errors = validationResult(req);
+
+            const book = new Book({
+                title: req.body.title,
+                author: req.body.author,
+                summary: req.body.summary,
+                isbn: req.body.isbn,
+                genre: typeof req.body.genre === "undefined" ? [] : req.body.genre,
+                _id: req.params.id,
+            });
+
+            if(!errors.isEmpty()) {
+                const [
+                    allAuthors,
+                    allGenres
+                ] = await Promise.all([
+                    Author.find().sort({ lastName: 1 }).exec(),
+                    Genre.find().sort({ name: 1 }).exec(),
+                ]);
+
+                for (const genre of allGenres) {
+                    if (book.genre.indexOf(genre._id) > -1) {
+                        genre.checked = "true";
+                    }
+                }
+
+                res.render("book-form", {
+                    title: "Update Book",
+                    authors: allAuthors,
+                    genres: allGenres,
+                    book: book,
+                    errors: errors.array(),
+                });
+            }
+            else {
+                const updatedBook = await Book.findByIdAndUpdate(req.params.id, book);
+
+                res.redirect(updatedBook.url);
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Book update POST");
     },
 }
 

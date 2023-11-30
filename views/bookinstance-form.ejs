@@ -30,32 +30,39 @@
 
                 <form method="POST" action="">
                     <div class="form-group">
-                      <label class="mb-1" for="book">Book:</label>
-                      <select id="book" class="form-control mb-3" type="select" placeholder="Select book" name="book" required="true">
-                        <% for (let book of bookList) {%>
-                          <option value="<%=book._id%>" <%=(locals.selectedBook === book._id.toString() ? "selected" : "")%>><%=book.title%></option>
+                        <% if (locals.bookList) {%>
+                            <label class="mb-1" for="book">Book:</label>
+                            <select id="book" class="form-control mb-3" type="select" placeholder="Select book" name="book" required="true">
+                                <% for (let book of bookList) {%>
+                                    <option value="<%=book._id%>" <%=(locals.selectedBook === book._id.toString() ? "selected" : "")%>><%=book.title%></option>
+                                <%}%>
+                            </select>
+                        <%} else {%>
+                            <label class="mb-1" for="book">Book:</label>
+                            <select id="book" class="form-control mb-3" type="select" placeholder="Select book" name="book" required="true">
+                                <option value="<%=book._id%>"><%=book.title%></option>
+                            </select>
                         <%}%>
-                      </select>
                     </div>
                   
                     <div class="form-group">
-                      <label class="mb-1" for="imprint">Imprint:</label>
-                      <input id="imprint" class="form-control mb-3" type="text" placeholder="Publisher and date information" name="imprint" required="true" value="<%= (typeof bookInstance === 'undefined' ? '' : bookInstance.imprint) %>">
+                        <label class="mb-1" for="imprint">Imprint:</label>
+                        <input id="imprint" class="form-control mb-3" type="text" placeholder="Publisher and date information" name="imprint" required="true" value="<%= (typeof bookInstance === 'undefined' ? '' : bookInstance.imprint) %>">
                     </div>
                   
                     <div class="form-group">
-                      <label class="mb-1" for="due_back">Date when book available:</label>
-                      <input id="dueBack" class="form-control mb-3" type="date" name="dueBack" value="<%=(typeof bookInstance === 'undefined' ? '' : bookInstance.dueBackFormatted)%>">
+                        <label class="mb-1" for="dueBack">Date when book available:</label>
+                        <input id="dueBack" class="form-control mb-3" type="date" name="dueBack" value="<%=(typeof bookInstance === 'undefined' ? '' : bookInstance.dueBackFormattedYYYYMMDD)%>">
                     </div>
                   
                     <div class="form-group">
-                      <label class="mb-1" for="status">Status:</label>
-                      <select id="status" class="form-control mb-3" type="select" placeholder="Select status" name="status" required="true">
-                        <option value="Maintenance">Maintenance</option>
-                        <option value="Available">Available</option>
-                        <option value="Loaned">Loaned</option>
-                        <option value="Reserved">Reserved</option>
-                      </select>
+                        <label class="mb-1" for="status">Status:</label>
+                        <select id="status" class="form-control mb-3" type="select" placeholder="Select status" name="status" required="true">
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Available">Available</option>
+                            <option value="Loaned">Loaned</option>
+                            <option value="Reserved">Reserved</option>
+                        </select>
                     </div>
                   
                     <button class="btn btn-primary mb-3" type="submit">Submit</button>

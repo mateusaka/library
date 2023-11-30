@@ -158,11 +158,56 @@ const GenreController = {
     },
 
     updateGet: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Genre update GET");
+        try {
+            const genre = await Genre.findById(req.params.id).exec();
+
+            if(genre === null) {
+                return res.send("Genre not found");
+            }
+
+            res.render("genre-form", {
+                title: "Update Genre",
+                genre: genre
+            });
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Genre update GET");
     },
 
     updatePost: async (req, res) => {
-        res.send("NOT IMPLEMENTED: Genre update POST");
+        try {
+            await body("name", "Genre must not be empty.")
+                .isLength({ min: 1 })
+                .escape()
+                .run(req);
+
+            const errors = validationResult(req);
+
+            const genre = new Genre({
+                name: req.body.name,
+                _id: req.params.id
+            });
+
+            if(!errors.isEmpty()) {
+                const genre = await Genre.findById(req.params.id);
+
+                res.render("genre-form", {
+                    title: "Update Genre",
+                    genre: genre
+                });
+            }
+            else {
+                const updatedGenre = await Genre.findByIdAndUpdate(req.params.id, genre);
+
+                res.redirect(updatedGenre.url);
+            }
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+
+        //res.send("NOT IMPLEMENTED: Genre update POST");
     },
 }
 
