@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require("express");
+const compression = require("compression");
 const helmet = require("helmet");
 const RateLimit = require("express-rate-limit");
 
@@ -34,6 +35,7 @@ app.use(
 
 app.use(limiter);
 
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
